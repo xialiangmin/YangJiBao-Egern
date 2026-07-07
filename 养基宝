@@ -1,0 +1,23 @@
+#!name=养基宝 Pro
+#!desc=解锁VIP，去广告
+
+mitm:
+  hostnames:
+    - "*.yangjibao.com"
+
+scriptings:
+  - http_response:
+      name: VIP
+      match: ^https?:\/\/.*yangjibao\.com\/.*\/account|vip_info
+      body_required: true
+      operation: >-
+        jsonjq '.data.vip_label=true
+        | .data.vip_expiry_date="2099-12-31"
+        | .data.is_pay=true'
+
+  - http_response:
+      name: RemoveAD
+      match: ^https?:\/\/.*yangjibao\.com\/unify_ad
+      body_required: true
+      operation: >-
+        jsonjq '.data=null'
