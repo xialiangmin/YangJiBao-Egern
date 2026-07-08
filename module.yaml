@@ -11,10 +11,10 @@ scriptings:
       name: 养基宝VIP
       match: ^https?:\/\/.*yangjibao\.com\/.*\/(?:account|vip_info)
       body_required: true
-      script_url: https://raw.githubusercontent.com/你的GitHub用户名/YangJiBao-Egern/main/scripts/yangjibao.js
+      script_url: https://raw.githubusercontent.com/xialiangmin/YangJiBao-Egern/refs/heads/main/yangjibao.js
 
   - http_response:
       name: 去广告
       match: ^https?:\/\/.*yangjibao\.com\/unify_ad
       body_required: true
-      script_url: https://raw.githubusercontent.com/你的GitHub用户名/YangJiBao-Egern/main/scripts/yangjibao.js
+      script_url: https://raw.githubusercontent.com/xialiangmin/YangJiBao-Egern/refs/heads/main/yangjibao.js
