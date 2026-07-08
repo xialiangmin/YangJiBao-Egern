@@ -1,11 +1,10 @@
 #!name=养基宝 Pro
 #!desc=解锁VIP，去广告
 
-mitm:
-  hostnames:
-    - "*.yangjibao.com"
+[MITM]
+  hostname = *.yangjibao.com
 
-scriptings:
+[Script]
   - http_response:
       name: VIP
       match: ^https?:\/\/.*yangjibao\.com\/.*\/account|vip_info
