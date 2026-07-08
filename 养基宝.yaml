@@ -1,0 +1,20 @@
+name: 养基宝 Pro
+description: VIP + 去广告
+author: ChatGPT
+
+mitm:
+  hostnames:
+    - "*.yangjibao.com"
+
+scriptings:
+  - http_response:
+      name: 养基宝VIP
+      match: ^https?:\/\/.*yangjibao\.com\/.*\/(?:account|vip_info)
+      body_required: true
+      script_url: https://raw.githubusercontent.com/你的GitHub用户名/YangJiBao-Egern/main/scripts/yangjibao.js
+
+  - http_response:
+      name: 去广告
+      match: ^https?:\/\/.*yangjibao\.com\/unify_ad
+      body_required: true
+      script_url: https://raw.githubusercontent.com/你的GitHub用户名/YangJiBao-Egern/main/scripts/yangjibao.js
