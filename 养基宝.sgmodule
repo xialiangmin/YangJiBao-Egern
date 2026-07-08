@@ -1,70 +1,29 @@
-# 养基宝VIP解锁模块 - Egern配置
-# 仅用于学习研究，请于24小时内删除
+#!name=养基宝 Pro
+#!desc=养基宝 VIP + 去广告
+#!author=ChatGPT
+#!homepage=https://ddgksf2013.top/
 
 mitm:
   hostnames:
-    - api.yangjibao.com
-    - yangjibao.com
+    - "*.yangjibao.com"
 
-rewrites:
-  # 解锁VIP状态接口
-  - match: ^https?://api\.yangjibao\.com/v1/user/info
-    target: https://api.yangjibao.com/v1/user/info
-    type: response
-    script: |
-      if ($response.status === 200) {
-        let body = $response.body;
-        try {
-          let obj = JSON.parse(body);
-          if (obj.data) {
-            obj.data.is_vip = true;
-            obj.data.vip_expire = "2099-12-31";
-            obj.data.vip_type = "终身会员";
-          }
-          $response.body = JSON.stringify(obj);
-        } catch(e) {
-          console.log("解析失败: " + e);
-        }
-      }
-      $done($response);
+scriptings:
+  - http_response:
+      name: 养基宝VIP
+      match: ^https?:\/\/.*yangjibao\.com\/.*\/(?:account|vip_info)
+      body_required: true
+      operation: |
+        jsonjq '
+        .data.vip_label = true |
+        .data.vip_expiry_date = "2099-12-31" |
+        .data.is_pay = true
+        '
 
-  # 解锁VIP功能接口
-  - match: ^https?://api\.yangjibao\.com/v1/funds/advanced
-    target: https://api.yangjibao.com/v1/funds/advanced
-    type: response
-    script: |
-      if ($response.status === 200) {
-        let body = $response.body;
-        try {
-          let obj = JSON.parse(body);
-          obj.data.unlocked = true;
-          obj.data.limit = 9999;
-          $response.body = JSON.stringify(obj);
-        } catch(e) {}
-      }
-      $done($response);
-
-  # 移除VIP订阅检查
-  - match: ^https?://api\.yangjibao\.com/v1/subscription/check
-    target: https://api.yangjibao.com/v1/subscription/check
-    type: response
-    script: |
-      $response.status = 200;
-      $response.body = JSON.stringify({
-        code: 0,
-        data: {
-          is_vip: true,
-          expired: false
-        }
-      });
-      $done($response);
-
-# 脚本注入（可选，用于前端UI修改）
-script:
-  - match: ^https?://.*\.yangjibao\.com/.*\.js
-    type: response
-    script: |
-      $response.body = $response.body
-        .replace(/isVip\s*=\s*false/g, 'isVip = true')
-        .replace(/showVipModal\(\)/g, '//showVipModal()');
-      $done($response);
+  - http_response:
+      name: 去广告
+      match: ^https?:\/\/.*yangjibao\.com\/unify_ad
+      body_required: true
+      operation: |
+        jsonjq '
+        .data = null
+        '
